@@ -2,14 +2,12 @@
 
 좋아하는 투자 구루들의 경험·지식·저서를 종합 학습한 세컨드 브레인.
 
-## 구조 (책 중심 2-layer)
+## 구조 (소스 2종 + 합성 1층)
 
-- **Layer 1 — 책 코퍼스** (`books/`): 책별 정밀 캡처. 저자의 경험·판단·노하우를 장별로 구조화.
-- **Layer 2 — 합성** (`synthesis/`): 제3의 AI 투자 구루 「나성의현인」.
-  책을 한 권씩 읽으며 투자 지평을 넓혀간다. 독서 기록(`reading-log.md`)에 무엇을
-  배웠고 철학이 어떻게 바뀌었는지 남기고, 버전(v0.1, v0.2...)으로 관리한다.
-  버전이 곧 현인의 스펙이다.
-- **보조 — 구루 파일** (`gurus/`): 책이 아닌 구루(블로거·유튜버 등)용. 책 중심이 우선.
+- **소스 A — 책** ([[books/_index|저서 색인]]): 저서가 있는 구루. 책을 제1소스로 한다.
+- **소스 B — 구루 렌즈** ([[gurus/_index|구루 캐논]]): 블로거·전략가. 저서가 없거나 블로그가 본체인 캐논의 제2소스.
+- **합성** ([[나성의현인]]): 두 소스를 같은 절차(흡수 기록 → 철학 반영 → 버전 업)로 소화한다.
+  버전은 [[synthesis/versions/_index|버전 스냅샷]]에 불변 파일로 보관한다.
 
 ## 사용 모드
 
@@ -30,8 +28,11 @@ ChatGPT(Custom GPT), Gemini(Gems) 등 어떤 AI 도구든 가져갈 수 있다.
 - 이 폴더를 깃헙 레포로 두면 PC Obsidian에서 vault로 열어 그래프 뷰 탐색 가능.
 - 구루 추가: `GURU_TEMPLATE.md` 복사 → 작성 → `gurus/_index.md` 등록 → 필요시 `synthesis/conflict-rules.md` 갱신.
 - 책 추가: `books/<저자>/<책제목>/` 아래 장별 정밀 캡처 (요약 아님 — 경험·판단·노하우 전부 구조화). 원문은 각 책 디렉터리의 `source/`에 로컬 보관.
+- 깃 설정: `git config core.precomposeunicode true` (macOS 한글 파일명 NFD 문제 방지).
+  `.obsidian/`은 `app.json`·`core-plugins.json`만 커밋한다.
 
 ## 제약
 
 - 개별 종목 추천·매매 타이밍·목표주가·단기 주가 예측은 하지 않음 (교육·의사결정 위생 중심).
 - 인용은 짧게, 출처(책·장) 표기. 저서 원문 대량 복제 금지.
+- 외부 AI 도구에 올리는 파일은 티어 1로 한정: `synthesis/나성의현인.md`·`USAGE.md`·`synthesis/conflict-rules.md`·각 책의 `principles.md`·`quotes.md`·`gurus/` 렌즈 노트. `chNN.md`·`index.md`·`source/`는 로컬 전용 (PORTABLE.md 참조).

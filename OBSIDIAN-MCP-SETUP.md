@@ -55,3 +55,9 @@ claude mcp add guru-brain -- npx mcp-remote@latest https://127.0.0.1:27124/mcp/ 
 
 - 플러그인: https://github.com/coddingtonbear/obsidian-local-rest-api
 - API 키는 절대 깃에 올리지 않는다.
+
+## 확인 필요 (미검증)
+
+- Local REST API 플러그인의 `/mcp/` 엔드포인트 존재 여부를 플러그인 README에서 확인한 뒤 이 문서를 확정한다.
+- 27124는 자가서명 TLS. `mcp-remote` 실패 시 플러그인 설정에서 HTTP(27123) 활성화 후 `http://127.0.0.1:27123/mcp/` 사용(로컬 전용).
+- `claude mcp add`는 키를 `~/.claude.json`에 평문 저장. 공유 PC에서는 환경변수 참조로 대체.

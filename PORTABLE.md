@@ -1,14 +1,21 @@
 # 이식 가이드
 
 브레인은 전부 평범한 마크다운이라 어떤 AI 도구든 가져갈 수 있다.
-핵심은 두 개만 올리면 된다: `synthesis/나성의현인.md` + `USAGE.md`.
-책 내용은 쓰는 만큼 `books/`에서 가져간다.
+
+## 반출 티어
+
+- **티어 1 (외부 반출 허용)**: `synthesis/나성의현인.md`, `USAGE.md`,
+  `synthesis/conflict-rules.md`, `synthesis/judgment-rubric.md`,
+  `synthesis/absorb/`, `synthesis/versions/`,
+  각 책의 `<저자>-<책약칭>-principles.md`·`<저자>-<책약칭>-quotes.md`,
+  `gurus/` 렌즈 노트 (패턴 요약 — 원문 아님).
+- **티어 2 (로컬 전용)**: 각 책의 `chNN.md`·`index.md`, `source/`,
+  `synthesis/backtests/`, `dist/`, `reviews/`. 외부 RAG에 올리지 않는다 (저작권·용량).
 
 ## Claude (claude.ai) — Projects
 
 1. 새 Project 생성 (이름: 나성의현인)
-2. Project Knowledge에 업로드: `synthesis/나성의현인.md`, `USAGE.md`,
-   `synthesis/conflict-rules.md`, 쓰는 책의 `books/<저자>/<책>/` 파일들
+2. Project Knowledge에 티어 1 파일 업로드
 3. Custom instructions에 `USAGE.md` 내용을 그대로 붙여넣기
 
 ## Claude Code
@@ -19,25 +26,34 @@
 
 ## Claude Cowork
 
-- Google Drive에 guru-brain 폴더를 동기화해 두면 Cowork에서 참조 가능.
+- (미검증) 로컬 폴더 지정 방식 확인 후 기재. 확인 전까지 Claude Code 경로 사용.
 
 ## ChatGPT — Custom GPT
 
 1. GPT 만들기 → Instructions에 `나성의현인.md` + `USAGE.md` 붙여넣기
-2. Knowledge에 책 파일(`books/<저자>/<책>/` 전체) 업로드
+2. Knowledge에 티어 1 파일만 업로드. 파일 수 상한 존재 (현재 수치는 OpenAI 문서 확인).
+   책이 늘면 `build_bundle.py --tier 1`로 1파일 번들.
 
 ## Gemini — Gems
 
-- Gem instructions에 위와 동일하게 붙여넣기 + 파일 첨부.
+- Gem instructions에 위와 동일하게 붙여넣기 + 티어 1 파일 첨부.
 
 ## 단일 파일 번들 (업로드가 번거로운 도구용)
 
 ```bash
-python3 build_bundle.py
+python3 build_bundle.py           # 전체 번들
+python3 build_bundle.py --tier 1  # 티어 1만 (외부 업로드용)
 ```
 
-`dist/나성의현인-번들.md` 하나가 생성된다. 이 파일 하나만 올리면
-페르소나 + 사용법 + 전체 코퍼스가 들어간다. (단, 책이 늘면 용량이 커지므로
+### `build_bundle.py` 규약
+
+- 포함 순서: 나성의현인 → USAGE → conflict-rules → judgment-rubric → principles/quotes (책 순) → gurus 렌즈 노트.
+- 제외: `source/`, 티어 2 전체 (`--tier 1` 시).
+- `[[링크]]`는 `[표시](#슬러그)` 형태의 앵커로 변환 (최선 노력).
+- 헤더에 `version` (나성의현인.md frontmatter), 생성일, 포함 파일 해시를 기록.
+- 5MB 초과 시 경고 + 책 단위 분할 권장.
+
+`dist/나성의현인-번들.md` 하나가 생성된다. (단, 책이 늘면 용량이 커지므로
 많아지면 책 단위로 나눠 올리는 것을 권장)
 
 ## 주의사항
