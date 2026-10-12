@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans CJK KR', sans-serif;
+    background: #f4f6fb;
+    display: flex; justify-content: center;
+    padding: 40px 20px;
+  }
+  .canvas { width: 1000px; }
+  .title {
+    text-align: center; margin-bottom: 8px;
+    font-size: 34px; font-weight: 700; color: #1a2333;
+  }
+  .subtitle {
+    text-align: center; margin-bottom: 36px;
+    font-size: 16px; color: #6b768c;
+  }
+  .layer {
+    border-radius: 18px; padding: 26px 30px; margin-bottom: 6px;
+    box-shadow: 0 4px 18px rgba(20,30,60,.08);
+  }
+  .layer-1 { background: #ffffff; border: 2px solid #dbe4ff; }
+  .layer-2 { background: #fffdf6; border: 2px solid #f0dcae; }
+  .layer-tag {
+    display: inline-block; font-size: 13px; font-weight: 700;
+    padding: 5px 14px; border-radius: 999px; margin-bottom: 14px;
+    letter-spacing: .02em;
+  }
+  .tag-1 { background: #e7efff; color: #2f54eb; }
+  .tag-2 { background: #fdf0d3; color: #9a6b1a; }
+  .tag-verify { background: #e6f7ee; color: #147a45; }
+  .tag-use { background: #f1eaff; color: #6a3fd4; }
+  .layer h2 { font-size: 22px; color: #1a2333; margin-bottom: 6px; }
+  .layer p.desc { font-size: 14px; color: #6b768c; margin-bottom: 18px; }
+  .books { display: flex; gap: 16px; }
+  .book {
+    flex: 1; background: #f6f9ff; border: 1.5px solid #dbe4ff;
+    border-radius: 12px; padding: 16px;
+  }
+  .book.more { display: flex; align-items: center; justify-content: center;
+    background: transparent; border-style: dashed; color: #8a94a8; font-size: 28px; }
+  .book h3 { font-size: 16px; color: #2f54eb; margin-bottom: 10px; }
+  .book ul { list-style: none; }
+  .book li { font-size: 13px; color: #4a5568; padding: 3px 0; font-family: monospace; }
+  .book li span { font-family: 'Noto Sans CJK KR', sans-serif; color: #8a94a8; font-size: 12px; }
+  .mid {
+    background: #ffffff; border: 2px solid #e2e8f2; border-radius: 14px;
+    padding: 20px 30px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 20px;
+    box-shadow: 0 4px 18px rgba(20,30,60,.06);
+  }
+  .mid .tag { flex-shrink: 0; }
+  .mid h3 { font-size: 18px; color: #1a2333; margin-bottom: 4px; }
+  .mid p { font-size: 14px; color: #6b768c; }
+  .mid .pills { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+  .pill {
+    font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 999px;
+    background: #f1f4fa; color: #4a5568;
+  }
+  .arrow { text-align: center; padding: 10px 0; }
+  .arrow .line { font-size: 26px; color: #8a94a8; line-height: 1; }
+  .arrow .label {
+    display: inline-block; font-size: 13px; font-weight: 700; color: #fff;
+    background: #4a5568; padding: 4px 14px; border-radius: 999px; margin-top: 6px;
+  }
+  .sage-grid { display: flex; gap: 14px; margin-bottom: 16px; }
+  .sage-item {
+    flex: 1; background: #fff; border: 1.5px solid #f0dcae; border-radius: 12px;
+    padding: 14px 16px; text-align: center;
+  }
+  .sage-item h4 { font-size: 14px; color: #9a6b1a; margin-bottom: 4px; }
+  .sage-item p { font-size: 12.5px; color: #6b768c; }
+  .version {
+    background: #1a2333; color: #fff; border-radius: 12px; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    font-size: 15px; font-weight: 700;
+  }
+  .version .v { background: #f5b942; color: #1a2333; padding: 4px 14px; border-radius: 8px; }
+  .version .arr { color: #f5b942; font-size: 20px; }
+  .verify { background: #ffffff; border: 2px solid #c9ecd9; }
+  .verify-cols { display: flex; gap: 14px; }
+  .verify-col {
+    flex: 1; background: #f4fbf7; border: 1.5px solid #c9ecd9;
+    border-radius: 12px; padding: 14px 16px;
+  }
+  .verify-col h4 { font-size: 14px; color: #147a45; margin-bottom: 6px; }
+  .verify-col p { font-size: 12.5px; color: #4a5568; line-height: 1.6; }
+  .loop-note {
+    margin-top: 14px; text-align: center; font-size: 14px; font-weight: 700; color: #147a45;
+  }
+  .use { background: #ffffff; border: 2px solid #ddd0f7; }
+  .modes { display: flex; gap: 14px; margin-bottom: 16px; }
+  .mode {
+    flex: 1; border-radius: 12px; padding: 16px; text-align: center;
+    background: #f8f5ff; border: 1.5px solid #ddd0f7;
+  }
+  .mode h4 { font-size: 15px; color: #6a3fd4; margin-bottom: 6px; }
+  .mode p { font-size: 12.5px; color: #6b768c; }
+  .footer { display: flex; gap: 14px; }
+  .foot-item {
+    flex: 1; border-radius: 12px; padding: 14px 18px; font-size: 13.5px;
+  }
+  .foot-item b { display: block; margin-bottom: 4px; font-size: 14px; }
+  .foot-aux { background: #f1f4fa; color: #4a5568; }
+  .foot-limit { background: #fff1f1; color: #a33; }
+  .foot-limit b { color: #c0392b; }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="title">AI 투자 브레인 설계도</div>
+  <div class="subtitle">guru-brain · 책 중심 2-layer · 나성의현인이 책을 읽으며 성장한다</div>
+
+  <!-- Layer 1 -->
+  <div class="layer layer-1">
+    <span class="layer-tag tag-1">Layer 1 · 책 코퍼스</span>
+    <h2>books/ — 책별 정밀 캡처</h2>
+    <p class="desc">요약이 아니다. 저자의 경험·판단·노하우를 장별로 빠짐없이 구조화한다.</p>
+    <div class="books">
+      <div class="book">
+        <h3>책 1</h3>
+        <ul>
+          <li>ch01.md <span>장별 정밀 노트</span></li>
+          <li>ch02.md <span>…</span></li>
+          <li>index.md <span>전체 지도</span></li>
+          <li>principles.md <span>원칙 + 반례</span></li>
+          <li>quotes.md <span>발췌 + 출처</span></li>
+          <li>source/ <span>원문 보관</span></li>
+        </ul>
+      </div>
+      <div class="book">
+        <h3>책 2</h3>
+        <ul>
+          <li>ch01.md <span>장별 정밀 노트</span></li>
+          <li>ch02.md <span>…</span></li>
+          <li>index.md <span>전체 지도</span></li>
+          <li>principles.md <span>원칙 + 반례</span></li>
+          <li>quotes.md <span>발췌 + 출처</span></li>
+          <li>source/ <span>원문 보관</span></li>
+        </ul>
+      </div>
+      <div class="book more">+ …</div>
+    </div>
+  </div>
+
+  <div class="arrow"><div class="line">▼</div><div class="label">정밀 캡처 → 독서</div></div>
+
+  <!-- Reading log -->
+  <div class="mid">
+    <span class="layer-tag tag-1 tag">독서 기록</span>
+    <div>
+      <h3>reading-log.md</h3>
+      <p>현인이 이 책에서 무엇을 배웠고, 기존 철학과 어떻게 관계되는지 기록</p>
+    </div>
+    <div class="pills">
+      <span class="pill">강화</span><span class="pill">충돌</span><span class="pill">신규</span>
+    </div>
+  </div>
+
+  <div class="arrow"><div class="line">▼</div><div class="label">철학 반영 · 버전 업</div></div>
+
+  <!-- Layer 2 -->
+  <div class="layer layer-2">
+    <span class="layer-tag tag-2">Layer 2 · 합성</span>
+    <h2>나성의현인 — 제3의 AI 투자 구루</h2>
+    <p class="desc">여러 책의 통찰을 종합한 단일 페르소나. 한 사람의 목소리로 답한다.</p>
+    <div class="sage-grid">
+      <div class="sage-item"><h4>정체성</h4><p>세계관 · 말투</p></div>
+      <div class="sage-item"><h4>원칙 · 렌즈</h4><p>책에서 길어올린 판단 패턴</p></div>
+      <div class="sage-item"><h4>판단 프로세스</h4><p>질문을 받으면 거치는 순서</p></div>
+      <div class="sage-item"><h4>충돌 해소 규칙</h4><p>구루 간 충돌의 우선순위</p></div>
+    </div>
+    <div class="version">
+      <span class="v">v0.1</span><span class="arr">→</span>
+      <span class="v">v0.2</span><span class="arr">→</span>
+      <span class="v">v0.3</span>
+      <span style="font-weight:400; font-size:13px; color:#cbb;">읽은 책이 곧 스펙</span>
+    </div>
+  </div>
+
+  <div class="arrow"><div class="line">▼</div><div class="label">검증 루프</div></div>
+
+  <!-- Verify -->
+  <div class="layer verify">
+    <span class="layer-tag tag-verify">검증 · 한국 시장 백테스트</span>
+    <h2>철학 v1 → 백테스트 → 규칙 다듬기 → v2</h2>
+    <p class="desc">검증하는 건 수익률이 아니라 판단 품질이다.</p>
+    <div class="verify-cols">
+      <div class="verify-col">
+        <h4>역사적 국면 케이스</h4>
+        <p>코로나 폭락 · BBIG 버블 · 2차전지 급등락 등 10~20개 국면을 사전 고정. 판단 시점 정보만으로 현인의 판단을 재현하고 실제와 비교.</p>
+      </div>
+      <div class="verify-col">
+        <h4>아카이브 재현</h4>
+        <p>브리핑·Blue-Red에서 다룬 과거 종목을 현인 철학으로 재판단. 당시 기록이 정보 차단선 → 사후확증 편향 방지.</p>
+      </div>
+    </div>
+    <div class="loop-note">↺ 결과는 conflict-rules 개정으로 반영 → v2로 순환</div>
+  </div>
+
+  <div class="arrow"><div class="line">▼</div><div class="label">사용</div></div>
+
+  <!-- Use -->
+  <div class="layer use">
+    <span class="layer-tag tag-use">사용 모드</span>
+    <h2>전용 사이드챗에서 질의응답</h2>
+    <p class="desc">아카이브는 재료 창고, 현인은 그 위에 서는 합성.</p>
+    <div class="modes">
+      <div class="mode"><h4>개별 구루</h4><p>"버핏은 이 상황을 뭐라고 했지?"</p></div>
+      <div class="mode"><h4>합성</h4><p>"현인, 너는 어떻게 봐?"</p></div>
+      <div class="mode"><h4>비교</h4><p>"두 관점이 갈리는데?"</p></div>
+    </div>
+    <div class="footer">
+      <div class="foot-item foot-aux"><b>보조 · gurus/</b>책이 아닌 구루(블로거·유튜버)용. Obsidian 호환 md + [[링크]]</div>
+      <div class="foot-item foot-limit"><b>제약</b>종목 추천 · 매매 타이밍 · 목표주가 제외. 교육·의사결정 위생 중심.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
