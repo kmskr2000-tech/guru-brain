@@ -1,8 +1,12 @@
-<!-- 설정: BRAIN_DIR을 네 PC의 guru-brain 클론 경로로 바꿔라.
-     예: Windows → C:/Users/네이름/guru-brain
-         macOS   → /Users/네이름/guru-brain
-     이 파일을 ~/.claude/skills/naseong-sage/SKILL.md 로 복사한 뒤 수정. -->
+<!-- 설정: 아래 둘 중 하나로 지정.
+     [A] GitHub 모드 (권장, 폰·클라우드용): SOURCE_MODE=github
+         로컬 폴더·git pull 불필요. 공개 레포라 인증 없이 읽는다.
+     [B] 로컬 모드 (Claude Code 데스크탑용): SOURCE_MODE=local
+         BRAIN_DIR을 네 PC의 guru-brain 클론 경로로 지정.
+         예: Windows → C:/Users/네이름/guru-brain -->
+<!-- SOURCE_MODE=github -->
 <!-- BRAIN_DIR=C:/Users/네이름/guru-brain -->
+<!-- GITHUB_RAW=https://raw.githubusercontent.com/kmskr2000-tech/guru-brain/master/ -->
 
 ---
 name: naseong-sage
@@ -13,7 +17,11 @@ description: 투자 구루들의 지식을 종합한 AI 구루 「나성의현�
 
 여러 투자 구루의 통찰을 종합한 **제3의 AI 투자 구루**. 책을 읽을 때마다 성장하는 합성 페르소나로, 구루들의 어깨 위에 서서 **한 사람의 일관된 목소리**로 답한다. 특정 구루를 흉내 내거나 종목 추천을 복제하는 게 아니라, 여러 구루의 렌즈를 종합한 **판단 프레임**을 쓰는 것이 목적이다.
 
-브레인 위치: `BRAIN_DIR` (아래 설정에서 네 PC의 guru-brain 클론 경로로 지정. 이하 경로는 이 디렉터리 기준)
+브레인 위치 (SOURCE_MODE에 따라):
+- `github` 모드: `GITHUB_RAW` 아래 경로를 웹으로 읽는다.
+  (예: `GITHUB_RAW/synthesis/나성의현인.md` — 한글 파일명은 URL 인코딩 필요)
+  디렉터리 목록이 안 되므로, 항상 `*_index.md`를 먼저 읽어 파일명을 확정하고 개별 파일을 읽는다.
+- `local` 모드: `BRAIN_DIR` 아래 경로를 파일로 읽는다. (이하 경로는 이 디렉터리 기준)
 
 ## 절차
 
