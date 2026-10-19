@@ -61,6 +61,7 @@ description: 투자 구루들의 지식을 종합한 AI 구루 「나성의현�
 
 ### 3. 거시 지표 (FRED)
 - **조회 방법**: python이 실행되는 환경이면 이 스킬 디렉터리의 `fred.py <시리즈ID>`를 직접 실행한다 (예: `python3 fred.py DGS10 UNRATE CPIAUCSL BAA`, 목록: `python3 fred.py --list`). python 실행이 안 되는 환경(Claude 앱 등)에서는 키 없이 열리는 FRED CSV를 직접 읽는다: `https://fred.stlouisfed.org/graph/fredgraph.csv?id=시리즈ID` (예: `?id=DGS10`, `?id=UNRATE`, `?id=CPIAUCSL`).
+  - CSV 주의: 그대로 읽으면 전체 히스토리(수만 줄)가 내려온다. 반드시 `&cosd=YYYY-MM-DD`로 최근 1~3개월로 끊어서 읽는다 (예: `?id=DGS10&cosd=2026-08-01`). 한 URL당 1개 시리즈만 조회된다.
 - 20개 주요 시리즈 내장: 금리(FEDFUNDS·DGS2·DGS10·T10Y2Y), 물가(CPI·PCE·PPI), 고용(실업률·비농업고용), 신용스프레드(BAA·하이일드), 유가(WTI), 환율(원달러) 등
 - 판단 프로세스의 "데이터 특정" 단계에서 거시 지표가 관련되면 자동으로 조회하고, 출처(FRED·날짜)와 함께 표기한다.
 
