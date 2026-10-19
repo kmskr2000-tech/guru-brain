@@ -5,8 +5,9 @@
     python3 fred.py DGS10                    # 최신값 1개
     python3 fred.py DGS10 CPIAUCSL UNRATE    # 여러 시리즈
     python3 fred.py --list                   # 자주 쓰는 시리즈 목록
+    python3 fred.py --api-key 키 DGS10       # 키 직접 전달 (Claude 앱 등 .env 없는 환경)
 
-API 키는 ~/workspace/skills/nonggu-lens/.env 의 FRED_API_KEY를 읽는다.
+API 키 우선순위: --api-key 인자 > FRED_API_KEY 환경변수 > ~/workspace/skills/nonggu-lens/.env
 """
 import json
 import os
@@ -73,11 +74,16 @@ def fetch(series_id, key, limit=1):
 
 def main():
     args = sys.argv[1:]
+    key_arg = None
+    if "--api-key" in args:
+        i = args.index("--api-key")
+        key_arg = args[i + 1] if i + 1 < len(args) else None
+        args = args[:i] + args[i + 2:]
     if not args or args[0] == "--list":
         for sid, label in SERIES.items():
             print(f"{sid}: {label}")
         return
-    key = get_key()
+    key = key_arg or get_key()
     if not key:
         print("FRED_API_KEY 없음", file=sys.stderr)
         sys.exit(1)

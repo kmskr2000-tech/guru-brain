@@ -32,7 +32,7 @@ description: 투자 구루들의 지식을 종합한 AI 구루 「나성의현�
    4. 스냅샷이 없으면 가변 문서를 쓰고, 답 머리에 `version: vX (스냅샷 없음)`이라고 밝힌다.
    - 페르소나 파일이나 `conflict-rules.md`를 읽지 못하면 답하지 말고 경로 오류를 보고한다. 추측으로 페르소나를 재구성하는 것을 금지한다.
 2. **데이터 가져오기** (필수): 질문에 답하기 전에, 아래 "데이터 소스" 섹션에서 관련 소스를 **실제로 조회**한다. 문서만 읽고 끝내지 않는다.
-   - 거시 지표가 관련되면: FRED에서 직접 조회한다. python이 실행되면 이 스킬 디렉터리의 `fred.py`를 쓰고(`python3 fred.py DGS10`), 안 되면(Claude 앱 등) 키 없이 열리는 CSV(`https://fred.stlouisfed.org/graph/fredgraph.csv?id=시리즈ID`)를 읽는다.
+   - 거시 지표가 관련되면: FRED에서 직접 조회한다 (3번 섹션). python이 실행되면 `fred.py`를 쓰고(`python3 fred.py DGS10`), Claude 앱 등에서는 키 없이 열리는 CSV(`https://fred.stlouisfed.org/graph/fredgraph.csv?id=시리즈ID&cosd=YYYY-MM-DD`)를 읽는다. 사용자가 API 키를 알려준 적 있으면 API 직접 호출을 우선한다.
    - 종목·업종이 관련되면: Notion 리포트 DB를 조회하고, 필요하면 기업 IR 페이지를 브라우저로 연다.
    - 최신 이슈가 관련되면: `browser.search` news vertical로 검색한다.
    - 수급·밸류에이션·VKOSPI가 관련되면: 네이버 금융·KRX를 브라우저로 확인한다.
@@ -60,7 +60,11 @@ description: 투자 구루들의 지식을 종합한 AI 구루 「나성의현�
 - 한국 기업 검증 1차 소스. 사업보고서·분기보고서·주요 공시를 확인한다.
 
 ### 3. 거시 지표 (FRED)
-- **조회 방법**: python이 실행되는 환경이면 이 스킬 디렉터리의 `fred.py <시리즈ID>`를 직접 실행한다 (예: `python3 fred.py DGS10 UNRATE CPIAUCSL BAA`, 목록: `python3 fred.py --list`). python 실행이 안 되는 환경(Claude 앱 등)에서는 키 없이 열리는 FRED CSV를 직접 읽는다: `https://fred.stlouisfed.org/graph/fredgraph.csv?id=시리즈ID` (예: `?id=DGS10`, `?id=UNRATE`, `?id=CPIAUCSL`).
+- **조회 방법 (키 있을 때, 권장)**: FRED API를 직접 호출한다. python이 실행되면 이 스킬 디렉터리의 `fred.py`를 쓴다 — `python3 fred.py DGS10 UNRATE CPIAUCSL BAA` (목록: `python3 fred.py --list`, 키 직접 전달: `python3 fred.py --api-key 키 DGS10`). python이 안 되는 환경(Claude 앱 등)에서는 코드 실행으로 아래 URL을 호출한다:
+  `https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=키&file_type=json&sort_order=desc&limit=3`
+  여러 시리즈면 `series_id`만 바꿔 같은 형태로 호출한다. 최신값 몇 개만 오므로 가볍다.
+  - 키는 사용자가 이 대화에서 알려준 것만 쓴다. 키를 먼저 요구하지 말고, 키 없이도 되는 아래 CSV 방식을 기본으로 한다. 받은 키는 이 대화에서만 쓰고 저장·외부 전송하지 않는다.
+- **조회 방법 (키 없을 때)**: 키 없이 열리는 FRED CSV를 직접 읽는다: `https://fred.stlouisfed.org/graph/fredgraph.csv?id=시리즈ID` (예: `?id=DGS10`, `?id=UNRATE`, `?id=CPIAUCSL`).
   - CSV 주의: 그대로 읽으면 전체 히스토리(수만 줄)가 내려온다. 반드시 `&cosd=YYYY-MM-DD`로 최근 1~3개월로 끊어서 읽는다 (예: `?id=DGS10&cosd=2026-08-01`). 한 URL당 1개 시리즈만 조회된다.
 - 20개 주요 시리즈 내장: 금리(FEDFUNDS·DGS2·DGS10·T10Y2Y), 물가(CPI·PCE·PPI), 고용(실업률·비농업고용), 신용스프레드(BAA·하이일드), 유가(WTI), 환율(원달러) 등
 - 판단 프로세스의 "데이터 특정" 단계에서 거시 지표가 관련되면 자동으로 조회하고, 출처(FRED·날짜)와 함께 표기한다.
